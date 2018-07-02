@@ -1,5 +1,7 @@
 ## Git Manager
 ## Soumille Lucas
+## 02/07/2018
+
 import git
 import os
 
@@ -12,9 +14,11 @@ class GitManager():
 		self.url = repository_url
 		self.path = repository_path
 
+	#Clone repository URL into Repository Path 
 	def clone_repository(self):
 		Repo.clone_from(self.url, self.path)
 
+	#Push repository path to repository URL
 	def push_repository(self):
 		git_repo = Repo(self.path)
 		git_repo.git.add('-A')
