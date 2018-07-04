@@ -19,23 +19,27 @@ class SigmaManager():
 	def init_git_repositories(self):
 		print("# Pull ITER Sigma rules repository #")
 		#delete already existing repository
-		shutil.rmtree(RULE_PATH, ignore_errors=True)
+		FolderHelper.delete_folder_content(RULE_PATH)
 		self.gm_sigma_rules = GitManager(GIT_PROTOCOL, ITER_SIGMA_RULE_REPOSITORY, RULE_PATH)
 		self.gm_sigma_rules.clone_repository()
 		print("# Pull ITER Sigma Configuration repository #")
-		shutil.rmtree(CONFIGURATION_PATH, ignore_errors=True)
+		FolderHelper.delete_folder_content(CONFIGURATION_PATH)
 		self.gm_sigma_rules = GitManager(GIT_PROTOCOL, ITER_CONFIGURATION_REPOSITORY, CONFIGURATION_PATH)
 		self.gm_sigma_rules.clone_repository()
 		print("# Init ITER Elastalert rule repository #")
-		shutil.rmtree(DESTINATION_PATH, ignore_errors=True)
-		#TO BE UPDATED
-		self.gm_elastalert_rules = GitManager(GIT_PROTOCOL, ITER_CONFIGURATION_REPOSITORY, CONFIGURATION_PATH)
+		FolderHelper.delete_folder_content(DESTINATION_PATH)
+		self.gm_elastalert_rules = GitManager(GIT_PROTOCOL, ITER_ELASTALERT_REPOSITORY, DESTINATION_PATH)
 
 	def convert_rules(self):
 		print("# Load all sigma rules #")
-		#fh = FolderHelper()
 		sw = SigmaWrapper(FolderHelper.get_all_yaml_files(RULE_PATH))
+		print("# Start Sigma to Elastalert #")
 		sw.process_rules()
+		print("# Elastalert rules created #")
+
+	def push_ruleset(self):
+		self.gm_elastalert_rules.push_repository()
+
 
 	def run(self):
 		print("# Start sigma-manager tool #")
@@ -43,6 +47,9 @@ class SigmaManager():
 		self.init_git_repositories()
 		print("# Step 2 : Convert Sigma rules to Elastalert #")
 		self.convert_rules()
+		print("# Step 3 : Push Ruleset #")
+		self.push_ruleset()
+		print("# Sigma-manager tool successful execution #")
 
 if __name__== "__main__":
 	SigmaManager().run()

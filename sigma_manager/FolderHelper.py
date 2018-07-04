@@ -5,6 +5,7 @@
 import os
 import sys
 import yaml
+import shutil
 
 class FolderHelper():
 
@@ -24,12 +25,12 @@ class FolderHelper():
 	def create_folder(folder_path):
 		os.makedirs(folder_path, exist_ok=True)
 
-	def load_alert_configuration(alert_conf_path):
-		alert_dict = {}
-		if os.path.exists(alert_conf_path):
-			with open(alert_conf_path) as f:
-				alert_dict = yaml.load(f.read())
-		return alert_dict
+	def load_yaml_dict(rootdir):
+		dict_from_file = {}
+		if os.path.exists(rootdir):
+			with open(rootdir) as f:
+				dict_from_file = yaml.load(f.read())
+		return dict_from_file
 
 	def load_alert_profiles(alert_profile_path):
 		alert_profile = {}
@@ -39,11 +40,18 @@ class FolderHelper():
 				with open(os.path.join(root, file)) as f:
 					lines = f.readlines()
 					for line in lines:
-						backend_options.append(line)
+						backend_options.append(line.rstrip())
 				alert_profile[file] = backend_options
 		return alert_profile
 
 	def write_line_to_file(line, file_path):
 		with open(file_path, 'a+') as f:
-			f.write(line + "\n")	
+			f.write(line + "\n")
+
+	def copy_file(src_path, dest_path):
+		shutil.copyfile(src_path, dest_path)
+
+	def delete_folder_content(rootdir):
+		shutil.rmtree(rootdir, ignore_errors=True)
+
 
