@@ -65,5 +65,6 @@ class SigmaWrapper():
 					FolderHelper.write_line_to_file(str(line), file_path)
 				print("# Sigmac success for rule {0} #".format(rule_name))
 			elif self.ignore_rule[rule_name] == IGNORE_SIGMA_VALUE:
+				print(rule_name)
 				#Copy Elastalert rule to target
 				FolderHelper.copy_file(rule_path, target_rule_path)

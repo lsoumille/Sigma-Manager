@@ -29,6 +29,7 @@ class SigmaManager():
 		print("# Init ITER Elastalert rule repository #")
 		FolderHelper.delete_folder_content(DESTINATION_PATH)
 		self.gm_elastalert_rules = GitManager(GIT_PROTOCOL, ITER_ELASTALERT_REPOSITORY, DESTINATION_PATH)
+		self.gm_elastalert_rules.clone_and_flush()
 
 	def convert_rules(self):
 		print("# Load all sigma rules #")

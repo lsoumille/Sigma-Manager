@@ -6,6 +6,7 @@ import os
 import sys
 import yaml
 import shutil
+import glob
 
 class FolderHelper():
 
@@ -15,9 +16,9 @@ class FolderHelper():
 			#Ietrate through files
 			for file in files:
 				#If it's not a yml file continue
-				if not file.endswith(".yml"):
+				if not file.endswith(".yml") and not file.endswith(".yaml"):
 					continue
-				filename = file[:-4]
+				filename, extension = os.path.splitext(file)
 				filename_path = os.path.join(root, file)
 				files_dict[filename] = filename_path
 		return files_dict
@@ -54,4 +55,7 @@ class FolderHelper():
 	def delete_folder_content(rootdir):
 		shutil.rmtree(rootdir, ignore_errors=True)
 
-
+	def delete_visible_content(rootdir):
+		files = glob.glob(os.path.join(rootdir,'*'))
+		for f in files:
+			os.remove(f)

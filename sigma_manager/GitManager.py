@@ -3,9 +3,9 @@
 ## 02/07/2018
 
 import git
-import os
 
 from git import Repo
+from sigma_manager.FolderHelper import FolderHelper
 
 class GitManager():
 
@@ -18,10 +18,13 @@ class GitManager():
 	def clone_repository(self):
 		Repo.clone_from(self.url, self.path)
 
-	#Push repository path to repository URL
+	def clone_and_flush(self):
+		Repo.clone_from(self.url, self.path)
+		FolderHelper.delete_visible_content(self.path)
+
+	#Push repository path to repository URL 
 	def push_repository(self):
 		git_repo = Repo(self.path)
 		git_repo.git.add('-A')
 		git_repo.git.commit(m='Commit from Python script')
 		git_repo.git.push('--set-upstream', 'origin', 'master')
-
