@@ -58,4 +58,4 @@ class FolderHelper():
 	def delete_visible_content(rootdir):
 		files = glob.glob(os.path.join(rootdir,'*'))
 		for f in files:
-			os.remove(f)
+			shutil.rmtree(f, ignore_errors=True)
