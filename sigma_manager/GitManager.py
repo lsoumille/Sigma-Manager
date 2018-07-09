@@ -30,7 +30,7 @@ class GitManager():
 			git_repo.git.commit(m='Commit from Python script')
 			git_repo.git.push('--set-upstream', 'origin', 'master')
 		except git.exc.GitCommandError as err:
-			if "Your branch is up to date" in str(err):
+			if "Your branch is up to date" in str(err) or "nothing to commit" in str(err):
 				print("# Ruleset is already up to date #")
 			else:
 				raise	
