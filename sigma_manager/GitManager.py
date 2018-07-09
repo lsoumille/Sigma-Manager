@@ -24,7 +24,14 @@ class GitManager():
 
 	#Push repository path to repository URL 
 	def push_repository(self):
-		git_repo = Repo(self.path)
-		git_repo.git.add('-A')
-		git_repo.git.commit(m='Commit from Python script')
-		git_repo.git.push('--set-upstream', 'origin', 'master')
+		try:
+			git_repo = Repo(self.path)
+			git_repo.git.add('-A')
+			git_repo.git.commit(m='Commit from Python script')
+			git_repo.git.push('--set-upstream', 'origin', 'master')
+		except git.exc.GitCommandError as err:
+			if "Your branch is up to date" in str(err):
+				print("# Ruleset is already up to date #")
+			else:
+				raise	
+			
