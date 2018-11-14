@@ -26,11 +26,14 @@ class SigmaManager():
 		FolderHelper.delete_folder_content(CONFIGURATION_PATH)
 		self.gm_sigma_rules = GitManager(GIT_PROTOCOL, ITER_CONFIGURATION_REPOSITORY, CONFIGURATION_PATH)
 		self.gm_sigma_rules.clone_repository()
-		print("# Init ITER Elastalert rule repository #")
-		FolderHelper.delete_folder_content(DESTINATION_PATH)
-		self.gm_elastalert_rules = GitManager(GIT_PROTOCOL, ITER_ELASTALERT_REPOSITORY, DESTINATION_PATH)
-		self.gm_elastalert_rules.clone_and_flush()
-
+		print("# Init ITER Elastalert rule repositories #")
+		FolderHelper.delete_folder_content(DESTINATION_PATH_1)
+		self.gm_elastalert_rules_1 = GitManager(GIT_PROTOCOL, ITER_ELASTALERT_REPOSITORY, DESTINATION_PATH_1, ITER_ELASTALERT_REPOSITORY_BRANCH_1)
+		self.gm_elastalert_rules_1.clone_and_flush()
+		FolderHelper.delete_folder_content(DESTINATION_PATH_2)
+		self.gm_elastalert_rules_2 = GitManager(GIT_PROTOCOL, ITER_ELASTALERT_REPOSITORY, DESTINATION_PATH_2, ITER_ELASTALERT_REPOSITORY_BRANCH_2)
+		self.gm_elastalert_rules_2.clone_and_flush()
+		
 	def convert_rules(self):
 		print("# Load all sigma rules #")
 		sw = SigmaWrapper(FolderHelper.get_all_yaml_files(RULE_PATH))
@@ -39,8 +42,8 @@ class SigmaManager():
 		print("# Elastalert rules created #")
 
 	def push_ruleset(self):
-		self.gm_elastalert_rules.push_repository()
-
+		self.gm_elastalert_rules_1.push_repository()
+		self.gm_elastalert_rules_2.push_repository()
 
 	def run(self):
 		print("# Start sigma-manager tool #")

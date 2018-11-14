@@ -5,11 +5,14 @@
 GIT_PROTOCOL = "SSH"
 RULE_PATH = "/tmp/rules"
 CONFIGURATION_PATH = "/tmp/conf"
-DESTINATION_PATH = "/tmp/target"
+DESTINATION_PATH_1 = "/tmp/target1"
+DESTINATION_PATH_2 = "/tmp/target2"
 
 ITER_SIGMA_RULE_REPOSITORY = "ssh://git@git.iter.org/itsecu/sigma_rules.git"
 ITER_CONFIGURATION_REPOSITORY = "ssh://git@git.iter.org/itsecu/sigma_configuration.git"
 ITER_ELASTALERT_REPOSITORY = "ssh://git@git.iter.org/itsecu/elastalert_rules.git"
+ITER_ELASTALERT_REPOSITORY_BRANCH_1 = "kib1"
+ITER_ELASTALERT_REPOSITORY_BRANCH_2 = "kib2"
 
 CONFIGURATION_BINDING_FILENAME = "elk-iter.yml"
 CONFIGURATION_ALERT_FILENAME = "rule_alert_profile.yml"

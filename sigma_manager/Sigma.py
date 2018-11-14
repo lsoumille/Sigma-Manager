@@ -33,8 +33,12 @@ class SigmaWrapper():
 		return sigma_cmd
 
 	def process_rules(self):
+		rule_cpt = 0
 		for rule_name, rule_path in self.rule_dict.items():
-			target_rule_path = rule_path.replace(RULE_PATH, DESTINATION_PATH)
+			if (rule_cpt % 2) == 0:
+				target_rule_path = rule_path.replace(RULE_PATH, DESTINATION_PATH_1)
+			else:
+				target_rule_path = rule_path.replace(RULE_PATH, DESTINATION_PATH_2)
 			target_folder_path = os.path.dirname(target_rule_path)
 			#Create directory in target path
 			FolderHelper.create_folder(target_folder_path)
@@ -68,3 +72,5 @@ class SigmaWrapper():
 				print(rule_name)
 				#Copy Elastalert rule to target
 				FolderHelper.copy_file(rule_path, target_rule_path)
+			#Increase rule cpt
+			rule_cpt = rule_cpt + 1
