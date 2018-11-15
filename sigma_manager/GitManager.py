@@ -27,7 +27,6 @@ class GitManager():
 	def push_repository(self):
 		try:
 			git_repo = Repo(self.path)
-			git_repo.git.branch(self.branch)
 			git_repo.git.add('-A')
 			git_repo.git.commit(m='Commit from Python script')
 			git_repo.git.push('--set-upstream', 'origin', self.branch)
