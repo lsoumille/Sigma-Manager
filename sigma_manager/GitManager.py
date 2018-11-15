@@ -17,10 +17,10 @@ class GitManager():
 
 	#Clone repository URL into Repository Path 
 	def clone_repository(self):
-		Repo.clone_from(self.url, self.path)
+		Repo.clone_from(self.url, self.path, self.branch)
 
 	def clone_and_flush(self):
-		Repo.clone_from(self.url, self.path)
+		Repo.clone_from(self.url, self.path, self.branch)
 		FolderHelper.delete_visible_content(self.path)
 
 	#Push repository path to repository URL 
