@@ -18,9 +18,12 @@ CONFIGURATION_BINDING_FILENAME = "elk-iter.yml"
 CONFIGURATION_ALERT_FILENAME = "rule_alert_profile.yml"
 CONFIGURATION_ALERT_PROFILES = "profiles"
 CONFIGURATION_IGNORE_SIGMA = "ignore_rule.yml"
+CONFIGURATION_BACKEND_ASSIGNATION = "backend_assignation.yml"
 
 SIGMA_BACKEND = "elastalert"
 
 DEFAULT_ALERT_PROFILE = "default"
 
 IGNORE_SIGMA_VALUE = "elastalert"
+
+ALL_BACKENDS = "all"

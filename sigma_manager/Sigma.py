@@ -23,6 +23,9 @@ class SigmaWrapper():
 		#Load ignore configuration
 		ignore_conf_path = os.path.join(CONFIGURATION_PATH, CONFIGURATION_IGNORE_SIGMA)
 		self.ignore_rule = FolderHelper.load_yaml_dict(ignore_conf_path)
+		#Load backend assignation profile
+		backend_assignation_path = os.path.join(CONFIGURATION_PATH, CONFIGURATION_BACKEND_ASSIGNATION)
+		self.backend_assignation = FolderHelper.load_yaml_dict(backend_assignation_path)
 
 	def generate_sigma_query(self, rule_path, backend_options):
 		mapping_file_path = os.path.join(CONFIGURATION_PATH, CONFIGURATION_BINDING_FILENAME)
@@ -35,13 +38,23 @@ class SigmaWrapper():
 	def process_rules(self):
 		rule_cpt = 0
 		for rule_name, rule_path in self.rule_dict.items():
-			if (rule_cpt % 2) == 0:
-				target_rule_path = rule_path.replace(RULE_PATH, DESTINATION_PATH_1)
+			#Computer backend assignation, could be ALL or a dedicated one.
+			target_rule_paths = []
+			if self.backend_assignation[rule_name] == ALL_BACKENDS:
+				target_rule_paths.append(rule_path.replace(RULE_PATH, DESTINATION_PATH_1))
+				target_rule_paths.append(rule_path.replace(RULE_PATH, DESTINATION_PATH_2))
 			else:
-				target_rule_path = rule_path.replace(RULE_PATH, DESTINATION_PATH_2)
-			target_folder_path = os.path.dirname(target_rule_path)
-			#Create directory in target path
-			FolderHelper.create_folder(target_folder_path)
+				if (rule_cpt % 2) == 0:
+					target_rule_paths.append(rule_path.replace(RULE_PATH, DESTINATION_PATH_1))
+				else:
+					target_rule_paths.append(rule_path.replace(RULE_PATH, DESTINATION_PATH_2))
+			target_folder_paths = []
+			for path in target_rule_paths:
+				folder_path = os.path.dirname(target_folder_path)
+				target_folder_path.append(folder_path)
+				#Create directory in target path
+				FolderHelper.create_folder(folder_path)
+			
 			#If the rule is not blacklisted or must be converter to sigma
 			if not rule_name in self.ignore_rule or self.ignore_rule[rule_name] != IGNORE_SIGMA_VALUE:
 				#Check if a rule has a dedicated alert profile
@@ -65,12 +78,12 @@ class SigmaWrapper():
 					if not line:
 						rule_number = rule_number + 1
 						continue
-					file_path = os.path.join(target_folder_path, rule_name) + "_" + str(rule_number) + ".yml"
-					FolderHelper.write_line_to_file(str(line), file_path)
+					rule_name_target = rule_name + "_" + str(rule_number) + ".yml"
+					FolderHelper.write_rule_in_paths(rule_name_target, line, target_folder_paths)
 				print("# Sigmac success for rule {0} #".format(rule_name))
 			elif self.ignore_rule[rule_name] == IGNORE_SIGMA_VALUE:
 				print(rule_name)
 				#Copy Elastalert rule to target
-				FolderHelper.copy_file(rule_path, target_rule_path)
+				FolderHelper.copy_file_in_paths(rule_path, target_rule_paths)
 			#Increase rule cpt
 			rule_cpt = rule_cpt + 1

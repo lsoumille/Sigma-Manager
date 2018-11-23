@@ -44,6 +44,18 @@ class FolderHelper():
 						backend_options.append(line.rstrip())
 				alert_profile[file] = backend_options
 		return alert_profile
+	
+	def load_profiles(file_path):
+		profiles = {}
+		for root, subdirs, files in os.walk(file_path):
+			for file in files:
+				options = []
+				with open(os.path.join(root, file)) as f:
+					lines = f.readlines()
+					for line in lines:
+						options.append(line.rstrip())
+				profiles[file] = options
+		return profiles
 
 	def write_line_to_file(line, file_path):
 		with open(file_path, 'a+') as f:
@@ -51,6 +63,10 @@ class FolderHelper():
 
 	def copy_file(src_path, dest_path):
 		shutil.copyfile(src_path, dest_path)
+	
+	def copy_file_in_paths(src_path, dest_paths):
+		for path in dest_paths:
+			shutil.copyfile(src_path, path)
 
 	def delete_folder_content(rootdir):
 		shutil.rmtree(rootdir, ignore_errors=True)
@@ -59,3 +75,8 @@ class FolderHelper():
 		files = glob.glob(os.path.join(rootdir,'*'))
 		for f in files:
 			shutil.rmtree(f, ignore_errors=True)
+			
+	def write_rule_in_paths(rule_name, content, paths):
+		for path in paths:
+			file_path = os.path.join(path, rule_name)
+			write_line_to_file(str(content), file_path)
