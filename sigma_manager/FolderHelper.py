@@ -79,4 +79,4 @@ class FolderHelper():
 	def write_rule_in_paths(rule_name, content, paths):
 		for path in paths:
 			file_path = os.path.join(path, rule_name)
-			write_line_to_file(str(content), file_path)
+			FolderHelper.write_line_to_file(str(content), file_path)

@@ -40,7 +40,7 @@ class SigmaWrapper():
 		for rule_name, rule_path in self.rule_dict.items():
 			#Computer backend assignation, could be ALL or a dedicated one.
 			target_rule_paths = []
-			if self.backend_assignation[rule_name] == ALL_BACKENDS:
+			if rule_name in self.backend_assignation and self.backend_assignation[rule_name] == ALL_BACKENDS:
 				target_rule_paths.append(rule_path.replace(RULE_PATH, DESTINATION_PATH_1))
 				target_rule_paths.append(rule_path.replace(RULE_PATH, DESTINATION_PATH_2))
 			else:
@@ -50,8 +50,8 @@ class SigmaWrapper():
 					target_rule_paths.append(rule_path.replace(RULE_PATH, DESTINATION_PATH_2))
 			target_folder_paths = []
 			for path in target_rule_paths:
-				folder_path = os.path.dirname(target_folder_path)
-				target_folder_path.append(folder_path)
+				folder_path = os.path.dirname(path)
+				target_folder_paths.append(folder_path)
 				#Create directory in target path
 				FolderHelper.create_folder(folder_path)
 			
