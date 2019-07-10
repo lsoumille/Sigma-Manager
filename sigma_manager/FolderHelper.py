@@ -13,7 +13,9 @@ class FolderHelper():
 	def get_all_yaml_files(rootdir):
 		files_dict = {}
 		for root, subdirs, files in os.walk(rootdir):
-			#Ietrate through files
+			if root.endswith("waiting_for_approval"):
+				continue
+			#Iterate through files
 			for file in files:
 				#If it's not a yml file continue
 				if not file.endswith(".yml") and not file.endswith(".yaml"):
