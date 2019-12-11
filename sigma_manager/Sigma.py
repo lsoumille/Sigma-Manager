@@ -26,14 +26,23 @@ class SigmaWrapper():
 		#Load backend assignation profile
 		backend_assignation_path = os.path.join(CONFIGURATION_PATH, CONFIGURATION_BACKEND_ASSIGNATION)
 		self.backend_assignation = FolderHelper.load_yaml_dict(backend_assignation_path)
+		#Load backend mapping configuration file
+		self.mapping_file_path = os.path.join(CONFIGURATION_PATH, CONFIGURATION_BINDING_FILENAME)
+		self.mapping_configuration = FolderHelper.load_yaml_dict(mapping_file_path)
 
 	def generate_sigma_query(self, rule_path, backend_options):
-		mapping_file_path = os.path.join(CONFIGURATION_PATH, CONFIGURATION_BINDING_FILENAME)
-		sigma_cmd = ['sigmac', '-t', SIGMA_BACKEND, rule_path, '--config', mapping_file_path]
+		#mapping_file_path = os.path.join(CONFIGURATION_PATH, CONFIGURATION_BINDING_FILENAME)
+		sigma_cmd = ['sigmac', '-t', SIGMA_BACKEND, rule_path, '--config', self.mapping_file_path]
 		for opt in backend_options:
 			sigma_cmd.append('--backend-option')
 			sigma_cmd.append(opt)
 		return sigma_cmd
+	
+	def generate_array_with_all_fields(self, rule_path):
+		#Get fields from configuration
+		print(self.mapping_configuration)
+		#Get fields from alert file
+		rule_object = FolderHelper.load_yaml_dict(rule_path)
 
 	def process_rules(self):
 		rule_cpt = 0
@@ -57,11 +66,13 @@ class SigmaWrapper():
 			
 			#If the rule is not blacklisted or must be converter to sigma
 			if not rule_name in self.ignore_rule or self.ignore_rule[rule_name] != IGNORE_SIGMA_VALUE:
+				#Add Keyword blacklist to backend options
+				
 				#Check if a rule has a dedicated alert profile
 				if rule_name in self.alert_dict:
-					backend_options = self.alert_profiles[self.alert_dict[rule_name]]
+					backend_options.append(self.alert_profiles[self.alert_dict[rule_name]])
 				else:
-					backend_options = self.alert_profiles[DEFAULT_ALERT_PROFILE]
+					backend_options.append(self.alert_profiles[DEFAULT_ALERT_PROFILE])
 				try:
 					#Call sigmac
 					sigma_result = subprocess.check_output(self.generate_sigma_query(rule_path, backend_options))
